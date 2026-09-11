@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BookFinder</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%235a4030' d='M8 12c10-4 19-2 24 4v38c-5-6-14-8-24-4V12z'/%3E%3Cpath fill='%235a4030' d='M56 12c-10-4-19-2-24 4v38c5-6 14-8 24-4V12z'/%3E%3Cpath fill='%23d8c7ae' d='M32 16v38' stroke='%23d8c7ae' stroke-width='3'/%3E%3C/svg%3E">
+
+</head>
+
+<body>
+
+    <header>
+
+        <!-- Galho esquerdo -->
+        <img src="ramo-bookfinder.png" class="ramo ramo-esquerdo" alt="">
+
+        <!-- Galho direito -->
+        <img src="ramo-bookfinder.png" class="ramo ramo-direito" alt="">
+
+        <!-- Estrelas decorativas -->
+        <div class="estrelas">
+            <span>✦</span>
+            <span>·</span>
+            <span>✧</span>
+        </div>
+
+        <!-- Livrinhos decorativos -->
+        <div class="decoracao-livros">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <h1>BookFinder</h1>
+
+        <div class="linha-decorativa"></div>
+
+        <p>Encontre seu próximo livro</p>
+
+        <small>Descubra histórias, autores e novas leituras.</small>
+
+        <div class="detalhe-inferior">✦ &nbsp; · &nbsp; ✦</div>
+
+    </header>
+
+    <main>
+
+        <section class="busca">
+
+            <input 
+                type="text" 
+                id="campo-busca" 
+                placeholder="Digite o nome de um livro..."
+            >
+
+            <button id="botao-buscar">
+                Buscar
+            </button>
+
+        </section>
+
+        <section id="resultado">
+
+            <p>Digite o nome de um livro para começar!</p>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
