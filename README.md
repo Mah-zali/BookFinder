@@ -46,11 +46,18 @@ Entre as informações exibidas estão o título, autor, ano da primeira publica
 
 ## Instruções para execução local
 
-1. Baixe ou clone o projeto para o computador.
+1. Clone o repositório:
+
+   `git clone https://github.com/Mah-zali/BookFinder.git`
+
 2. Abra a pasta do projeto.
+
 3. Abra o arquivo `index.html` em um navegador.
+
 4. Digite o nome de um livro ou autor no campo de pesquisa.
+
 5. Clique no botão **Buscar** ou pressione a tecla **Enter**.
+
 6. Os livros encontrados serão apresentados na tela.
 
 ## Estrutura do projeto
