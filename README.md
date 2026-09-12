@@ -40,6 +40,10 @@ Criar uma aplicação frontend capaz de consumir uma API pública, processar seu
 
 O projeto utiliza a **Open Library API** para realizar as pesquisas de livros.
 
+A aplicação consulta a API de forma assíncrona utilizando `fetch`, processa os dados retornados em formato JSON e apresenta até 10 resultados por pesquisa.
+
+Entre as informações exibidas estão o título, autor, ano da primeira publicação, quantidade de edições e capa do livro, quando disponível.
+
 ## Instruções para execução local
 
 1. Baixe ou clone o projeto para o computador.
