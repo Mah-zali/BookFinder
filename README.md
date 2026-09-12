@@ -71,3 +71,8 @@ https://openlibrary.org/developers/api
 
 ```text
 https://openlibrary.org/search.json
+
+## Links
+
+- **Repositório no GitHub:** https://github.com/Mah-zali/BookFinder
+- **Aplicação publicada no GitHub Pages:** https://mah-zali.github.io/BookFinder/
