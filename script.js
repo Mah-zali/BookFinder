@@ -19,7 +19,7 @@ async function buscarLivros(termo) {
         if (!dados.docs || dados.docs.length === 0) {
 
             areaResultado.innerHTML = `
-                <p>😕 Nenhum livro encontrado.</p>
+                <p>Nenhum livro encontrado.</p>
                 <p>Tente pesquisar por outro título ou autor.</p>
             `;
 
@@ -115,7 +115,7 @@ document.getElementById("botao-buscar").addEventListener("click", () => {
     if (termo === "") {
 
         document.getElementById("resultado").innerHTML = `
-            <p>⚠️ Digite o nome de um livro para pesquisar.</p>
+            <p>Digite um título ou nome de autor para pesquisar.</p>
         `;
 
         return;
