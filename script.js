@@ -1,3 +1,22 @@
+// Conexão com o banco de dados Supabase
+const SUPABASE_URL = "https://zdqhwmzltbjqplnqfmhc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_DPaETczGhlP-Th0JhnD7Ww_PCnrCCbo";
+
+const banco = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Testa a conexão com a tabela de favoritos
+async function testarConexao() {
+    const { data, error } = await banco
+        .from("favoritos")
+        .select("id, titulo");
+
+    if (error) {
+        console.error("Erro ao conectar ao Supabase:", error);
+    } else {
+        console.log("Conexão com Supabase funcionando!", data);
+    }
+}
+
+testarConexao();
 async function buscarLivros(termo) {
 
     const areaResultado = document.getElementById("resultado");

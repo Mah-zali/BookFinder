@@ -9,7 +9,8 @@
     <title>BookFinder</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%235a4030' d='M8 12c10-4 19-2 24 4v38c-5-6-14-8-24-4V12z'/%3E%3Cpath fill='%235a4030' d='M56 12c-10-4-19-2-24 4v38c5-6 14-8 24-4V12z'/%3E%3Cpath fill='%23d8c7ae' d='M32 16v38' stroke='%23d8c7ae' stroke-width='3'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%235a4030' d='M8 12c10-4 19-2 24 4v38c-5-6-14-8-24-4V12z'/%3E%3Cpath fill='%235a4030' d='M56 12c-10-4-19-2-24 4v38c5-6 14-8 24-4V12z'/%3E%3Cpath fill='%23d8c7ae' d='M32 16v38' stroke='%23d8c7ae' stroke-width='3'/%3E%3C/svg%3E">
 
 </head>
 
@@ -53,14 +54,8 @@
 
         <section class="busca">
 
-            <input 
-                type="text" 
-                id="campo-busca" 
-                placeholder="Digite o nome de um livro..."
-                aria-label="Pesquisar por título ou autor"
-                autocomplete="off"
-                spellcheck="false"
-            >
+            <input type="text" id="campo-busca" placeholder="Digite o nome de um livro..."
+                aria-label="Pesquisar por título ou autor" autocomplete="off" spellcheck="false">
 
             <button id="botao-buscar">
                 Buscar
@@ -76,6 +71,10 @@
 
     </main>
 
+    <!-- Biblioteca Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <!-- JavaScript do BookFinder -->
     <script src="script.js"></script>
 
 </body>
