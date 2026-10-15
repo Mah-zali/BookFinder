@@ -3,6 +3,8 @@ const SUPABASE_URL = "https://zdqhwmzltbjqplnqfmhc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_DPaETczGhlP-Th0JhnD7Ww_PCnrCCbo";
 
 const banco = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
 // Testa a conexão com a tabela de favoritos
 async function testarConexao() {
     const { data, error } = await banco
@@ -17,6 +19,33 @@ async function testarConexao() {
 }
 
 testarConexao();
+
+
+// Salva um livro favorito no Supabase
+async function salvarFavorito(livro) {
+    try {
+        const { error } = await banco
+            .from("favoritos")
+            .insert({
+                titulo: livro.titulo,
+                autor: livro.autor,
+                ano_publicacao: livro.ano_publicacao,
+                capa_id: livro.capa_id,
+                openlibrary_key: livro.openlibrary_key
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        alert("Livro adicionado aos favoritos! ❤️");
+
+    } catch (erro) {
+        console.error("Erro ao salvar favorito:", erro);
+        alert("Não foi possível salvar o livro. Tente novamente.");
+    }
+}
+
 async function buscarLivros(termo) {
 
     const areaResultado = document.getElementById("resultado");
@@ -49,7 +78,7 @@ async function buscarLivros(termo) {
 
         const livros = dados.docs.slice(0, 10);
 
-        livros.forEach(livro => {
+        livros.forEach((livro, indice) => {
 
             const titulo = livro.title || "Título não informado";
 
@@ -66,7 +95,7 @@ async function buscarLivros(termo) {
             if (livro.cover_i) {
 
                 capa = `
-                    <img 
+                    <img
                         src="https://covers.openlibrary.org/b/id/${livro.cover_i}-M.jpg"
                         alt="Capa do livro ${titulo}"
                     >
@@ -103,13 +132,35 @@ async function buscarLivros(termo) {
                         <p>
                             <strong>Edições:</strong> ${edicoes}
                         </p>
-
+                        <button class="botao-favoritar" data-indice="${indice}" type="button">
+                            ♡ Favoritar
+                        </button>
                     </div>
 
                 </article>
             `;
         });
+        // Conecta os botões de favoritos aos livros encontrados
+        document.querySelectorAll(".botao-favoritar").forEach(botao => {
+            botao.addEventListener("click", async () => {
+                const indice = Number(botao.dataset.indice);
+                const livro = livros[indice];
 
+                botao.disabled = true;
+                botao.textContent = "Salvando...";
+
+                await salvarFavorito({
+                    titulo: livro.title || "Título não informado",
+                    autor: livro.author_name?.[0] || "Autor não informado",
+                    ano_publicacao: livro.first_publish_year || null,
+                    capa_id: livro.cover_i || null,
+                    openlibrary_key: livro.key || null
+                });
+
+                botao.disabled = false;
+                botao.textContent = "♡ Favoritar";
+            });
+        });
     } catch (erro) {
 
         console.error("Erro:", erro);
@@ -143,16 +194,14 @@ document.getElementById("botao-buscar").addEventListener("click", () => {
     buscarLivros(termo);
 });
 
-
 document.getElementById("campo-busca").addEventListener("keydown", (evento) => {
 
     if (evento.key === "Enter") {
-
         document.getElementById("botao-buscar").click();
-
     }
 
 });
+
 window.addEventListener("load", () => {
     document.getElementById("campo-busca").value = "";
 });
