@@ -1,0 +1,11 @@
+.git
+.gitignore
+README.md
+database.sql
+.vscode
+node_modules
+*.log
+*.tmp
+*.bak
+Dockerfile
+.dockerignore
