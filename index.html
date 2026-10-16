@@ -69,8 +69,31 @@
 
         </section>
 
-    </main>
+        <!-- Biblioteca de livros favoritos -->
+        <section class="secao-favoritos">
 
+            <div class="cabecalho-favoritos">
+                <h2>♡ Meus favoritos</h2>
+                <p>Seus livros salvos para consultar quando quiser.</p>
+            </div>
+
+            <div id="lista-favoritos" aria-live="polite">
+                <p>Carregando favoritos...</p>
+            </div>
+
+        </section>
+
+
+    </main>
+    <div id="notificacao" class="notificacao" role="status" aria-live="polite"></div>
+    <dialog id="dialogo-exclusao" class="dialogo-exclusao" aria-labelledby="titulo-exclusao">
+        <h2 id="titulo-exclusao">Remover dos favoritos?</h2>
+        <p>Tem certeza de que deseja retirar este livro da sua estante?</p>
+        <div class="acoes-dialogo">
+            <button id="cancelar-exclusao" type="button">Cancelar</button>
+            <button id="confirmar-exclusao" type="button">Sim, remover</button>
+        </div>
+    </dialog>
     <!-- Biblioteca Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 

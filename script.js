@@ -38,11 +38,19 @@ async function salvarFavorito(livro) {
             throw error;
         }
 
-        alert("Livro adicionado aos favoritos! ❤️");
+        mostrarNotificacao(
+            "Livro salvo nos favoritos!",
+            "Mais uma história para sua estante. ♡"
+        );
+        await listarFavoritos();
 
     } catch (erro) {
         console.error("Erro ao salvar favorito:", erro);
-        alert("Não foi possível salvar o livro. Tente novamente.");
+        mostrarNotificacao(
+            "Não foi possível salvar",
+            "Verifique sua conexão e tente novamente.",
+            "erro"
+        );
     }
 }
 
@@ -205,3 +213,234 @@ document.getElementById("campo-busca").addEventListener("keydown", (evento) => {
 window.addEventListener("load", () => {
     document.getElementById("campo-busca").value = "";
 });
+
+
+/* ========================================
+   NOTIFICAÇÕES PERSONALIZADAS
+======================================== */
+
+let temporizadorNotificacao;
+
+function mostrarNotificacao(titulo, mensagem, tipo = "sucesso") {
+    const notificacao = document.getElementById("notificacao");
+
+    clearTimeout(temporizadorNotificacao);
+
+    notificacao.replaceChildren();
+
+    const icone = document.createElement("span");
+    icone.className = "notificacao-icone";
+    icone.textContent = tipo === "sucesso" ? "♡" : "!";
+
+    const conteudo = document.createElement("div");
+
+    const tituloElemento = document.createElement("strong");
+    tituloElemento.textContent = titulo;
+
+    const mensagemElemento = document.createElement("p");
+    mensagemElemento.textContent = mensagem;
+
+    conteudo.append(tituloElemento, mensagemElemento);
+    notificacao.append(icone, conteudo);
+
+    notificacao.className = `notificacao notificacao-${tipo} visivel`;
+
+    temporizadorNotificacao = setTimeout(() => {
+        notificacao.classList.remove("visivel");
+    }, 3500);
+}
+
+
+/* ========================================
+   LISTAGEM DE LIVROS FAVORITOS
+======================================== */
+
+async function listarFavoritos() {
+
+    const area = document.getElementById("lista-favoritos");
+
+    area.textContent = "Carregando favoritos...";
+
+    try {
+
+        const { data, error } = await banco
+            .from("favoritos")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            throw error;
+        }
+
+        area.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            area.textContent = "Você ainda não possui livros favoritos.";
+            return;
+        }
+
+        data.forEach(livro => {
+
+            const cartao = document.createElement("article");
+            cartao.className = "livro livro-favorito";
+
+            if (livro.capa_id) {
+                const imagem = document.createElement("img");
+                imagem.src = `https://covers.openlibrary.org/b/id/${livro.capa_id}-M.jpg`;
+                imagem.alt = `Capa do livro ${livro.titulo}`;
+                cartao.appendChild(imagem);
+            } else {
+                const semCapa = document.createElement("div");
+                semCapa.className = "sem-capa";
+                semCapa.textContent = "📕 Capa não disponível";
+                cartao.appendChild(semCapa);
+            }
+
+            const informacoes = document.createElement("div");
+            informacoes.className = "informacoes-livro";
+
+
+            const titulo = document.createElement("h2");
+            titulo.textContent = livro.titulo;
+
+            const autor = document.createElement("p");
+            const rotuloAutor = document.createElement("strong");
+            rotuloAutor.textContent = "Autor: ";
+            autor.append(rotuloAutor, document.createTextNode(livro.autor || "Não informado"));
+
+            const ano = document.createElement("p");
+            const rotuloAno = document.createElement("strong");
+            rotuloAno.textContent = "Primeira publicação: ";
+            ano.append(rotuloAno, document.createTextNode(livro.ano_publicacao || "Não informado"));
+
+
+            const botao = document.createElement("button");
+            botao.className = "botao-excluir";
+            botao.type = "button";
+            botao.textContent = "Remover favorito";
+
+            botao.addEventListener("click", async () => {
+                botao.disabled = true;
+                botao.textContent = "Removendo...";
+
+                const removido = await excluirFavorito(livro.id);
+
+                if (!removido) {
+                    botao.disabled = false;
+                    botao.textContent = "Remover favorito";
+                }
+            });
+
+            informacoes.appendChild(titulo);
+            informacoes.appendChild(autor);
+            informacoes.appendChild(ano);
+            informacoes.appendChild(botao);
+
+            cartao.appendChild(informacoes);
+            area.appendChild(cartao);
+        });
+
+    } catch (erro) {
+
+        console.error("Erro ao listar favoritos:", erro);
+
+        area.textContent =
+            "Não foi possível carregar seus favoritos. Tente novamente.";
+    }
+}
+
+
+function confirmarExclusao() {
+    return new Promise(resolve => {
+        const dialogo = document.getElementById("dialogo-exclusao");
+        const cancelar = document.getElementById("cancelar-exclusao");
+        const confirmar = document.getElementById("confirmar-exclusao");
+
+        function finalizar(confirmado) {
+            dialogo.removeEventListener("close", aoFechar);
+            cancelar.removeEventListener("click", aoCancelar);
+            confirmar.removeEventListener("click", aoConfirmar);
+
+            if (dialogo.open) {
+                dialogo.close();
+            }
+
+            resolve(confirmado);
+        }
+
+        function aoFechar() {
+            finalizar(false);
+        }
+
+        function aoCancelar() {
+            finalizar(false);
+        }
+
+        function aoConfirmar() {
+            finalizar(true);
+        }
+
+        dialogo.addEventListener("close", aoFechar);
+        cancelar.addEventListener("click", aoCancelar);
+        confirmar.addEventListener("click", aoConfirmar);
+
+        dialogo.showModal();
+    });
+}
+
+/* ========================================
+   EXCLUSÃO DE LIVROS FAVORITOS
+======================================== */
+
+async function excluirFavorito(id) {
+
+    const confirmar = await confirmarExclusao();
+
+    if (!confirmar) {
+        return false;
+    }
+
+    try {
+
+        const { data, error } = await banco
+            .from("favoritos")
+            .delete()
+            .eq("id", id)
+            .select("id");
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data || data.length === 0) {
+            throw new Error("O livro não foi removido.");
+        }
+
+        await listarFavoritos();
+
+        mostrarNotificacao(
+            "Livro removido dos favoritos",
+            "Sua estante foi atualizada."
+        );
+
+        return true;
+
+    } catch (erro) {
+
+        console.error("Erro ao excluir favorito:", erro);
+        mostrarNotificacao(
+            "Não foi possível remover",
+            "Tente novamente em alguns instantes.",
+            "erro"
+        );
+
+        return false;
+    }
+}
+
+
+/* ========================================
+   CARREGAR FAVORITOS AO ABRIR A PÁGINA
+======================================== */
+
+listarFavoritos();
