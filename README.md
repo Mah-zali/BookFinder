@@ -83,3 +83,108 @@ https://openlibrary.org/search.json
 
 - **Repositório no GitHub:** https://github.com/Mah-zali/BookFinder
 - **Aplicação publicada no GitHub Pages:** https://mah-zali.github.io/BookFinder/
+
+---
+
+## Etapa 02 — Persistência de dados
+
+Nesta etapa, o BookFinder recebeu integração com um banco de dados PostgreSQL hospedado no Supabase.
+
+A aplicação permite adicionar livros aos favoritos, consultar os livros salvos e removê-los. Os registros permanecem armazenados no banco mesmo após fechar o navegador.
+
+### Estrutura do banco
+
+A tabela `favoritos` possui os seguintes campos:
+
+| Campo | Finalidade |
+|---|---|
+| `id` | Identificador do registro |
+| `created_at` | Data e hora do cadastro |
+| `titulo` | Título do livro |
+| `autor` | Nome do autor |
+| `ano_publicacao` | Ano da primeira publicação |
+| `capa_id` | Identificador da capa na Open Library |
+| `openlibrary_key` | Identificador do livro na Open Library |
+
+As operações são realizadas pela biblioteca JavaScript do Supabase, utilizando `INSERT`, `SELECT` e `DELETE`.
+
+A estrutura SQL e as políticas de acesso estão documentadas no arquivo `database.sql`.
+
+### Limitações conhecidas
+
+A aplicação não possui autenticação de usuários. Para atender aos requisitos acadêmicos, foram configuradas políticas RLS para o papel `anon`, permitindo leitura, inclusão e exclusão dos favoritos.
+
+Consequentemente, a lista de favoritos é compartilhada entre os visitantes, e qualquer pessoa com acesso à aplicação pode adicionar ou excluir registros.
+
+O Supabase utiliza um plano gratuito que pode pausar projetos após períodos de inatividade. Caso isso aconteça, as funcionalidades de favoritos ficarão temporariamente indisponíveis até a reativação do banco. A pesquisa pela Open Library continuará independente do Supabase.
+
+## Etapa 02 — Docker
+
+O BookFinder foi conteinerizado utilizando Docker e Nginx, permitindo executar a aplicação em um ambiente padronizado.
+
+### Docker Hub
+
+https://hub.docker.com/r/mahzali/bookfinder
+
+### Executar a aplicação
+
+Com o Docker instalado e funcionando, execute:
+
+```bash
+docker run -d -p 8080:80 mahzali/bookfinder:1.1
+```
+
+Depois acesse:
+
+http://localhost:8080
+
+### Versões da imagem
+
+- `1.0` — primeira imagem funcional.
+- `1.1` — imagem com healthcheck para verificar se o Nginx responde.
+- `latest` — imagem correspondente à versão 1.1.
+
+## Sidequests obrigatórias
+
+### SQ1 — .dockerignore
+
+Foi criado um arquivo `.dockerignore` para excluir arquivos desnecessários do contexto de construção, como o histórico Git, arquivos temporários, configurações locais e documentação.
+
+Isso reduz a quantidade de dados enviados ao processo de build e pode acelerar a construção. O Dockerfile copia apenas os arquivos necessários para servir a aplicação.
+
+### SQ2 — Versionamento das imagens
+
+Foram publicadas três tags no Docker Hub: `1.0`, `1.1` e `latest`.
+
+A versão 1.1 acrescenta uma verificação automática de saúde do servidor Nginx.
+
+### SQ3 — Descrição do Docker Hub
+
+O repositório público do Docker Hub possui uma descrição da aplicação, instruções de execução e link para o código-fonte no GitHub.
+
+### SQ4 — Execução simultânea e orquestração
+
+Foram executados dois containers do BookFinder simultaneamente:
+
+- `bookfinder-teste` — porta 8080, imagem 1.0.
+- `bookfinder-v11` — porta 8081, imagem 1.1.
+
+O teste foi realizado com `docker ps`, verificando os dois containers em execução. A versão 1.1 também apresentou status `healthy`.
+
+**Evidência:**
+
+![Dois containers do BookFinder executados simultaneamente](evidencias/docker-dois-containers.png)
+
+### Como gerenciar 100 containers?
+
+Se fosse necessário administrar 100 containers, a execução manual com comandos Docker se tornaria pouco prática. Uma solução seria utilizar o Kubernetes, uma plataforma de orquestração de containers.
+
+O Kubernetes organiza os recursos em um *cluster*, formado por máquinas que executam as aplicações. Os containers normalmente são executados dentro de unidades chamadas *pods*. Por meio de controladores como o Deployment, é possível manter várias *réplicas* da aplicação, distribuir a carga de trabalho, substituir pods que apresentem falhas e realizar atualizações de maneira controlada.
+
+Assim, em vez de iniciar e acompanhar manualmente 100 containers, o Kubernetes ajudaria a automatizar a implantação, a disponibilidade e o gerenciamento da aplicação.
+
+## Links da entrega
+
+- **Repositório GitHub:** https://github.com/Mah-zali/BookFinder
+- **Aplicação no GitHub Pages:** https://mah-zali.github.io/BookFinder/
+- **Repositório Docker Hub:** https://hub.docker.com/r/mahzali/bookfinder
