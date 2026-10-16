@@ -60,15 +60,23 @@ Entre as informações exibidas estão o título, autor, ano da primeira publica
 
 6. Os livros encontrados serão apresentados na tela.
 
+
 ## Estrutura do projeto
 
+```text
 BookFinder/
 │
 ├── index.html
 ├── style.css
 ├── script.js
 ├── ramo-bookfinder.png
-└── README.md
+├── database.sql
+├── Dockerfile
+├── .dockerignore
+├── README.md
+└── evidencias/
+    └── docker-dois-containers.png
+```
 
 ### Documentação
 
@@ -78,6 +86,7 @@ https://openlibrary.org/developers/api
 
 ```text
 https://openlibrary.org/search.json
+```
 
 ## Links
 
